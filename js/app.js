@@ -1,19 +1,17 @@
 // 个人网站 · 内容管理后台
 // 原理：读取/写入 portfolio 仓库里的 data.js，通过 GitHub Contents API 提交，个人站自动生效。
-// 所有内容只存在你自己的浏览器 localStorage，不上传任何服务器。
 
 const CONFIG = {
   owner: 'Yedeng-yzm',          // GitHub 用户名
   repo: 'portfolio',            // 个人站仓库名
   path: 'data.js',              // 内容文件路径
   branch: 'main',
-  password: 'admin123',         // 管理密码（可改成你自己的，改这里即可）
 };
 
 let state = null;   // 当前内容数据（与 data.js 里的 SITE_DATA 同结构）
 let fileSha = null; // data.js 在 GitHub 上的 sha，保存时需要带上
 
-const LS_KEY = 'portfolio-admin-auth';
+const TOKEN_KEY = 'portfolio-admin-token';
 
 /* ================= 工具 ================= */
 function esc(s) {
@@ -54,12 +52,9 @@ function serializeData(data) {
   return 'window.SITE_DATA = ' + JSON.stringify(data, null, 2) + ';\n';
 }
 
-/* ================= 本地存储 ================= */
-function getAuth() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; }
-}
-function setAuth(a) { localStorage.setItem(LS_KEY, JSON.stringify(a)); }
-function getToken() { return getAuth().token || ''; }
+/* ================= Token（存浏览器 localStorage，只需填一次） ================= */
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
 
 /* ================= GitHub API ================= */
 function ghHeaders(token) {
@@ -253,10 +248,6 @@ function switchTab(name) {
   });
 }
 
-function showLoginTip(msg) {
-  document.getElementById('login-tip').textContent = msg;
-}
-
 function showEditor() {
   document.getElementById('login-view').hidden = true;
   document.getElementById('editor-view').hidden = false;
@@ -286,18 +277,13 @@ async function doSave() {
 }
 
 function bindEvents() {
-  // 登录
+  // 登录（只需填一次 Token，之后自动进入）
   document.getElementById('login-btn').addEventListener('click', async () => {
-    const pwd = document.getElementById('login-password').value;
     const token = document.getElementById('login-token').value.trim();
-    if (pwd !== CONFIG.password) { showLoginTip('密码错误'); return; }
-    if (!token) { showLoginTip('请输入 GitHub Token'); return; }
-    setAuth({ password: pwd, token });
+    if (!token) { document.getElementById('login-tip').textContent = '请输入 GitHub Token'; return; }
+    setToken(token);
     showEditor();
     await doLoad();
-  });
-  document.getElementById('login-password').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('login-token').focus();
   });
   document.getElementById('login-token').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') document.getElementById('login-btn').click();
@@ -307,7 +293,7 @@ function bindEvents() {
   document.getElementById('load-btn').addEventListener('click', doLoad);
   document.getElementById('save-btn').addEventListener('click', doSave);
   document.getElementById('logout-btn').addEventListener('click', () => {
-    localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(TOKEN_KEY);
     state = null; fileSha = null;
     showLogin();
   });
@@ -356,8 +342,8 @@ function bindEvents() {
 /* ================= 启动 ================= */
 bindEvents();
 if (getToken()) {
-  // 已登录：直接进入编辑页并加载
   showEditor();
-  document.getElementById('login-password').value = getAuth().password || '';
   doLoad();
+} else {
+  showLogin();
 }

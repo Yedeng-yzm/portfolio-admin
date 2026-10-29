@@ -5,7 +5,7 @@
 **原理**：个人网站的内容全部存在 `portfolio` 仓库的 `data.js` 里。本后台通过 **GitHub Contents API** 读取 / 修改这个文件，保存即提交，个人网站自动更新。
 
 - 无后端、无服务器，纯静态，跑在 GitHub Pages 上
-- 登录后即可编辑：基本资料、技能、项目、博客
+- 首次填入 GitHub Token 后自动记住，之后打开直接进入，可编辑：基本资料、技能、项目、博客
 - Token 只存在你自己的浏览器 localStorage，不上传任何第三方
 
 ---
@@ -22,7 +22,7 @@
    - **Permissions** → Repository permissions → 找到 **Contents**，设为 **Read and write**
 3. 点底部 **Generate token**，复制生成的 `github_pat_...` 开头的那串（只显示一次，记得存好）
 
-> 这个 Token 就是后台的「钥匙」。请勿把它提交到任何公开仓库或发给别人。
+> 这个 Token 就是后台的「钥匙」。首次打开管理站时填进去即可，它会存在你自己的浏览器里，请勿发给别人。
 
 ---
 
@@ -51,10 +51,8 @@ git push -u origin main
 
 ## 三、使用
 
-1. 打开后台地址，输入：
-   - **管理密码**：默认 `admin123`（改法见下）
-   - **GitHub Token**：第一步生成的那串
-2. 点登录，会自动从 GitHub 读取当前 `data.js`
+1. 首次打开后台地址，填一次 **GitHub Token**，点「进入」（之后会自动记住、直接进入）
+2. 会自动从 GitHub 读取当前 `data.js`
 3. 在四个标签页里改内容，点 **保存并发布**
 4. 个人网站约 1 分钟内自动更新（GitHub Pages 需要一点构建时间）
 
@@ -62,7 +60,7 @@ git push -u origin main
 
 ## 四、常见问题
 
-**改管理密码**：编辑 `js/app.js` 顶部的 `CONFIG.password`，改成你自己的，然后重新 `git push`。
+**换 Token**：在后台右上角点「退出」，重新填一次新 Token；或清除该网站的浏览器 localStorage。
 
 **保存时报 403 / 401**：Token 没给 `Contents: Read and write` 权限，或没选对仓库，或已过期。
 

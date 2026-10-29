@@ -8,22 +8,18 @@
 </head>
 <body>
 
-  <!-- ============ 登录页 ============ -->
+  <!-- ============ 登录页（只需填一次 Token） ============ -->
   <div id="login-view" class="login-wrap">
     <div class="login-card">
       <h1>&gt;_ 个人网站管理</h1>
-      <p class="sub">登录后即可在线修改个人网站内容，保存即发布。</p>
-      <label>
-        管理密码
-        <input type="password" id="login-password" placeholder="默认 admin123" autocomplete="current-password">
-      </label>
+      <p class="sub">首次使用只需填一次 GitHub Token，之后会自动记住、直接进入。</p>
       <label>
         GitHub Token（PAT）
-        <input type="password" id="login-token" placeholder="ghp_... 需有该仓库 contents 权限" autocomplete="off">
+        <input type="password" id="login-token" placeholder="github_pat_... 需有 portfolio 仓库 contents 权限" autocomplete="off">
       </label>
-      <button class="btn-primary" id="login-btn">登录</button>
+      <button class="btn-primary" id="login-btn">进入</button>
       <p class="tip" id="login-tip"></p>
-      <p class="hint">Token 只存在你自己的浏览器 localStorage 里，不上传服务器。</p>
+      <p class="hint">Token 只存在你自己的浏览器 localStorage 里，不上传任何服务器。</p>
     </div>
   </div>
 
