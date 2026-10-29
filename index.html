@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人网站 · 内容管理</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ 登录页 ============ -->
+  <div id="login-view" class="login-wrap">
+    <div class="login-card">
+      <h1>&gt;_ 个人网站管理</h1>
+      <p class="sub">登录后即可在线修改个人网站内容，保存即发布。</p>
+      <label>
+        管理密码
+        <input type="password" id="login-password" placeholder="默认 admin123" autocomplete="current-password">
+      </label>
+      <label>
+        GitHub Token（PAT）
+        <input type="password" id="login-token" placeholder="ghp_... 需有该仓库 contents 权限" autocomplete="off">
+      </label>
+      <button class="btn-primary" id="login-btn">登录</button>
+      <p class="tip" id="login-tip"></p>
+      <p class="hint">Token 只存在你自己的浏览器 localStorage 里，不上传服务器。</p>
+    </div>
+  </div>
+
+  <!-- ============ 编辑页 ============ -->
+  <div id="editor-view" class="editor" hidden>
+    <header class="topbar">
+      <div class="brand">&gt;_ 内容管理</div>
+      <div class="actions">
+        <button id="load-btn" class="btn-ghost">↻ 从 GitHub 读取</button>
+        <button id="save-btn" class="btn-primary">保存并发布</button>
+        <button id="logout-btn" class="btn-ghost">退出</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="profile">基本资料</button>
+      <button class="tab" data-tab="skills">技能</button>
+      <button class="tab" data-tab="projects">项目</button>
+      <button class="tab" data-tab="blog">博客</button>
+    </nav>
+
+    <main class="content">
+      <!-- 基本资料 -->
+      <section class="panel" id="panel-profile"></section>
+      <!-- 技能 -->
+      <section class="panel" id="panel-skills" hidden></section>
+      <!-- 项目 -->
+      <section class="panel" id="panel-projects" hidden></section>
+      <!-- 博客 -->
+      <section class="panel" id="panel-blog" hidden></section>
+    </main>
+
+    <p class="status" id="status"></p>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
